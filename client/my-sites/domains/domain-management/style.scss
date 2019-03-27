@@ -170,12 +170,6 @@ input[type='radio'].domain-management-list-item__radio {
 	}
 }
 
-.edit__privacy-protection-toggle {
-	.form-toggle__label-content {
-		margin-left: 0;
-	}
-}
-
 .domain-details-card,
 .edit__domain-details-card {
 	.flag {
@@ -215,39 +209,6 @@ input[type='radio'].domain-management-list-item__radio {
 		.edit__transfer-button-fail-margin {
 			margin-left: 15px;
 		}
-	}
-}
-
-.domain-details-card__property {
-	font-size: 13px;
-	margin-bottom: 10px;
-	@include clear-fix;
-
-	&:last-of-type {
-		margin-bottom: 0;
-	}
-
-	strong {
-		float: left;
-		width: 50%;
-	}
-
-	& > span {
-		float: right;
-		text-align: right;
-		width: 50%;
-	}
-}
-
-.subscription-settings {
-	margin-top: 15px;
-	text-decoration: none;
-	text-align: center;
-	width: 100%;
-
-	@include breakpoint( '>660px' ) {
-		text-align: inherit;
-		width: inherit;
 	}
 }
 
