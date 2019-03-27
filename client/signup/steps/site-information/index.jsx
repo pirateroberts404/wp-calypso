@@ -13,6 +13,7 @@ import { each, includes, reduce, trim, size } from 'lodash';
  * Internal dependencies
  */
 import Card from 'components/card';
+import Gridicon from 'gridicons';
 import StepWrapper from 'signup/step-wrapper';
 import SignupActions from 'lib/signup/actions';
 import { getSiteInformation } from 'state/signup/steps/site-information/selectors';
@@ -119,7 +120,7 @@ export class SiteInformation extends Component {
 
 	renderSubmitButton = () => (
 		<Button primary type="submit" onClick={ this.handleSubmit }>
-			{ this.props.translate( 'Continue' ) }
+			<Gridicon icon="arrow-right" />
 		</Button>
 	);
 
