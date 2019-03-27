@@ -9,7 +9,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { localize } from 'i18n-calypso';
 import { isEnabled } from 'config';
-import { filter, find, flow, get, isEmpty, memoize, once } from 'lodash';
+import { filter, find, first, flow, get, isEmpty, memoize, once } from 'lodash';
 
 /**
  * Internal dependencies
@@ -41,6 +41,8 @@ import HeaderCake from 'components/header-cake';
 import Placeholder from 'my-sites/site-settings/placeholder';
 import DescriptiveHeader from 'my-sites/site-settings/settings-import/descriptive-header';
 import JetpackImporter from 'my-sites/site-settings/settings-import/jetpack-importer';
+
+import EmptyContent from 'components/empty-content';
 
 /**
  * Configuration for each of the importers to be rendered in this section. If
@@ -228,7 +230,20 @@ class SiteSettingsImport extends Component {
 		const siteTitle = title.length ? title : slug;
 
 		if ( getImporterForEngine( engine ) ) {
-			return this.renderActiveImporters( filterImportsForSite( site.ID, imports ) );
+			const activeImports = filterImportsForSite( site.ID, imports );
+			const firstImport = first( activeImports );
+
+			if ( isEmpty( activeImports ) || get( firstImport, 'importerState' ) === 'importer-upload-success' ) {
+				return (
+					<EmptyContent
+						illustration="/calypso/images/illustrations/illustration-ok.svg"
+						title={ 'Congratulations!' }
+						line={ 'Your password has been reset.' }
+					/>
+				)
+			}
+
+			return this.renderActiveImporters( activeImports );
 		}
 
 		if ( ! isHydrated ) {
@@ -255,7 +270,7 @@ class SiteSettingsImport extends Component {
 		this.setState( getImporterState() );
 	};
 
-	renderImportersList() {
+	renderImportersMain() {
 		return (
 			<>
 				<Interval onTick={ this.updateFromAPI } period={ EVERY_FIVE_SECONDS } />
@@ -279,7 +294,7 @@ class SiteSettingsImport extends Component {
 					<h1>{ translate( 'Import Content' ) }</h1>
 				</HeaderCake>
 				<EmailVerificationGate allowUnlaunched>
-					{ isJetpack ? <JetpackImporter /> : this.renderImportersList() }
+					{ isJetpack ? <JetpackImporter /> : this.renderImportersMain() }
 				</EmailVerificationGate>
 			</Main>
 		);
