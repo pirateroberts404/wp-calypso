@@ -15,7 +15,11 @@ import page from 'page';
 import ImporterActionButton from './action-button';
 import { resetImport } from 'lib/importer/actions';
 import { recordTracksEvent } from 'state/analytics/actions';
-import { setImportOriginSiteDetails } from 'state/importer-nux/actions';
+import {
+	clearImportingFromSignupFlow,
+	setImportOriginSiteDetails,
+} from 'state/importer-nux/actions';
+import { isImportingFromSignupFlow } from 'state/importer-nux/temp-selectors';
 import { SITE_IMPORTER } from 'state/imports/constants';
 import { getSelectedSiteSlug } from 'state/ui/selectors';
 
@@ -36,6 +40,7 @@ export class DoneButton extends React.PureComponent {
 		const {
 			importerStatus: { type },
 			site: { ID: siteId },
+			isSignup,
 			siteSlug,
 		} = this.props;
 
@@ -46,13 +51,14 @@ export class DoneButton extends React.PureComponent {
 			importer_id: tracksType,
 		} );
 
-		page( '/view/' + siteSlug );
+		page( isSignup ? `/view/${ siteSlug }?welcome` : `/view/${ siteSlug }` );
 	};
 
 	componentWillUnmount() {
 		const {
 			importerStatus: { importerId, type },
 			site: { ID: siteId },
+			isSignup,
 		} = this.props;
 
 		/**
@@ -64,6 +70,10 @@ export class DoneButton extends React.PureComponent {
 		if ( SITE_IMPORTER === type ) {
 			// Clear out site details, so that importers list isn't filtered
 			this.props.setImportOriginSiteDetails();
+		}
+
+		if ( isSignup ) {
+			this.props.clearImportingFromSignupFlow();
 		}
 	}
 
@@ -81,9 +91,10 @@ export class DoneButton extends React.PureComponent {
 export default flow(
 	connect(
 		state => ( {
+			isSignup: isImportingFromSignupFlow( state ),
 			siteSlug: getSelectedSiteSlug( state ),
 		} ),
-		{ setImportOriginSiteDetails, recordTracksEvent }
+		{ clearImportingFromSignupFlow, setImportOriginSiteDetails, recordTracksEvent }
 	),
 	localize
 )( DoneButton );
