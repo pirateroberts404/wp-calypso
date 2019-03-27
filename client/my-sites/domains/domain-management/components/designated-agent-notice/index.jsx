@@ -13,8 +13,13 @@ import Gridicon from 'gridicons';
  */
 import { DESIGNATED_AGENT, DOMAIN_REGISTRATION_AGREEMENTS } from 'lib/url/support';
 
+/**
+ * Style dependencies
+ */
+import './style.scss';
+
 const DesignatedAgentNotice = props => (
-	<div className="designated-agent-notice__container">
+	<div className="designated-agent-notice">
 		<Gridicon icon="info-outline" size={ 18 } />
 		<p className="designated-agent-notice__copy">
 			{ props.translate(
