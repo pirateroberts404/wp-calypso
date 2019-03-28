@@ -18,12 +18,12 @@ console.log( 'Building %s', dir );
 
 // TODO: Drop `--config-file ${ babelConfigFile }` once we've moved `babel.config.js` to `packages/calypso-build`.
 execSync( `npx babel --config-file ${ babelConfigFile } -d ${ outputDirEsm } ${ inputDir }`, {
-	env: Object.assign( {}, process.env, { CALYPSO_CLIENT: 'true' } ),
+	env: Object.assign( {}, process.env, { BROWSERSLIST_ENV: 'defaults' } ),
 	cwd: root,
 } );
 
 // TODO: Drop `--config-file ${ babelConfigFile }` once we've moved `babel.config.js` to `packages/calypso-build`.
 execSync( `npx babel --config-file ${ babelConfigFile } -d ${ outputDirCommon } ${ inputDir }`, {
-	env: Object.assign( {}, process.env, { CALYPSO_CLIENT: 'false' } ),
+	env: Object.assign( {}, process.env, { BROWSERSLIST_ENV: 'server' } ),
 	cwd: root,
 } );
