@@ -18,6 +18,7 @@ import Card from 'components/card';
 import ImporterHeader from '../importer-header';
 import ImportingPane from '../importing-pane';
 import SiteImporterInputPane from './site-importer-input-pane';
+import EmptyContent from 'components/empty-content';
 
 /**
  * Module variables
@@ -36,6 +37,16 @@ const uploadingStates = [
 	appStates.UPLOAD_PROCESSING,
 	appStates.UPLOADING,
 ];
+
+export const FromSignupPane = () => (
+	<div>
+		<EmptyContent
+			illustration="/calypso/images/illustrations/illustration-ok.svg"
+			title={ 'Congratulations!' }
+			line={ 'Your password has been reset.' }
+		/>
+	</div>
+);
 
 export default class extends React.PureComponent {
 	static displayName = 'SiteImporter';
@@ -70,12 +81,17 @@ export default class extends React.PureComponent {
 			'is-disabled': ! isEnabled,
 		} );
 
+		if ( state.importerState === 'from-signup' ) {
+			console.log( 'from-signup' );
+		}
+
 		return (
 			<Card className={ cardClasses }>
 				<ImporterHeader
 					importerStatus={ state }
 					{ ...{ icon, title, description, isEnabled, site } }
 				/>
+				{ state.importerState === 'from-signup' && <FromSignupPane engine={ state.engine } /> }
 				{ includes( importingStates, state.importerState ) && (
 					<ImportingPane
 						{ ...this.props }

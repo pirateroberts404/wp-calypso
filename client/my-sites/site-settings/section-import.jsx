@@ -42,8 +42,6 @@ import Placeholder from 'my-sites/site-settings/placeholder';
 import DescriptiveHeader from 'my-sites/site-settings/settings-import/descriptive-header';
 import JetpackImporter from 'my-sites/site-settings/settings-import/jetpack-importer';
 
-import EmptyContent from 'components/empty-content';
-
 /**
  * Configuration for each of the importers to be rendered in this section. If
  * you're adding a new importer, add it here. Importers will be rendered in the
@@ -195,8 +193,11 @@ class SiteSettingsImport extends Component {
 	 * @returns {Array} Importer react elements for the active import jobs
 	 */
 	renderActiveImporters( importsForSite ) {
+		// this seems the wrong way around - wasteful filtering. Flip it to importsForSite first and it'll be better
 		return importers.map( importer => {
 			const { type, isImporterEnabled, component: ImporterComponent } = importer;
+
+			console.log( importer );
 
 			if ( ! isImporterEnabled ) {
 				return;
@@ -233,14 +234,24 @@ class SiteSettingsImport extends Component {
 			const activeImports = filterImportsForSite( site.ID, imports );
 			const firstImport = first( activeImports );
 
-			if ( isEmpty( activeImports ) || get( firstImport, 'importerState' ) === 'importer-upload-success' ) {
-				return (
-					<EmptyContent
-						illustration="/calypso/images/illustrations/illustration-ok.svg"
-						title={ 'Congratulations!' }
-						line={ 'Your password has been reset.' }
-					/>
-				)
+			// if ( isEmpty( activeImports ) || get( firstImport, 'importerState' ) === 'importer-upload-success' ) {
+			// 	return (
+			// 		<EmptyContent
+			// 			illustration="/calypso/images/illustrations/illustration-ok.svg"
+			// 			title={ 'Congratulations!' }
+			// 			line={ 'Your password has been reset.' }
+			// 		/>
+			// 	)
+			// }
+			if ( isEmpty( activeImports ) ) {
+				return this.renderActiveImporters( [
+					{
+						engine,
+						importerState: 'from-signup',
+						type: 'importer-type-wix',
+						site,
+					},
+				] );
 			}
 
 			return this.renderActiveImporters( activeImports );
